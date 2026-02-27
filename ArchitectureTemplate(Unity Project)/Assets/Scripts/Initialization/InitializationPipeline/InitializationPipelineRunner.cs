@@ -1,16 +1,18 @@
-﻿using System;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace ArchitectureTemplate.Initialization
+namespace Initialization.InitializationPipeline
 {
-    public sealed class PipelineRunner
+    /// <summary>
+    /// Пайплайн, который последовательно выполняет шаги инициализации и обновляет модель прогресса.
+    /// </summary>
+    public sealed class InitializationPipelineRunner
     {
-        private readonly InitializationModel _model;
+        private readonly InitializationPipelineModel _model;
 
-        public PipelineRunner(InitializationModel model)
+        public InitializationPipelineRunner(InitializationPipelineModel model)
         {
             _model = model;
         }
@@ -24,12 +26,12 @@ namespace ArchitectureTemplate.Initialization
                 return true;
             }
 
-            float totalWeight = _model.Steps.Sum((IInitializationStep step) => step == null ? 0f : Mathf.Max(0f, step.Weight));
+            float totalWeight = _model.Steps.Sum((IInitializationPipelineStep step) => step == null ? 0f : Mathf.Max(0f, step.Weight));
             float completedWeight = 0f;
 
             _model.Progress.Value = 0f;
 
-            foreach (IInitializationStep step in _model.Steps)
+            foreach (IInitializationPipelineStep step in _model.Steps)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {

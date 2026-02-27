@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
+using Initialization.InitializationPipeline;
 using Zenject;
 
 namespace ArchitectureTemplate.Initialization
@@ -10,39 +10,38 @@ namespace ArchitectureTemplate.Initialization
     /// Стартовый раннер игры.
     /// Получает сервис и единственный тестовый шаг из DI и запускает пайплайн.
     /// </summary>
-    public sealed class GameInitialization : MonoBehaviour
+    public class GameInitialization : IInitializable
     {
-        private InitializationService _initializationService;
-        private IInitializationStep _testStep;
+        private readonly InitializationPipelineService _pipelineService;
+        private readonly IInitializationPipelineStep _testStep;
 
-        [Inject]
-        public void Construct(InitializationService initializationService, IInitializationStep testStep)
+        public GameInitialization(InitializationPipelineService pipelineService, IInitializationPipelineStep testStep)
         {
-            _initializationService = initializationService;
+            _pipelineService = pipelineService;
             _testStep = testStep;
         }
 
-        private void Start()
+        public void Initialize()
         {
             RunInitializationAsync().Forget();
         }
 
         private async UniTaskVoid RunInitializationAsync()
         {
-            var steps = new List<IInitializationStep> { _testStep };
-            _initializationService.SetSteps(steps);
+            List<IInitializationPipelineStep> steps = new List<IInitializationPipelineStep> { _testStep };
+            _pipelineService.SetSteps(steps);
 
-            using var cts = new CancellationTokenSource();
+            using CancellationTokenSource cts = new CancellationTokenSource();
 
-            bool success = await _initializationService.RunAsync(cts.Token);
+            bool success = await _pipelineService.RunAsync(cts.Token);
 
             if (success)
             {
-                Debug.Log("[Initialization] Game initialization completed successfully.");
+                UnityEngine.Debug.Log("[Initialization] Game initialization completed successfully.");
             }
             else
             {
-                Debug.LogError("[Initialization] Game initialization failed.");
+                UnityEngine.Debug.LogError("[Initialization] Game initialization failed.");
             }
         }
     }
