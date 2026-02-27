@@ -21,56 +21,6 @@
 
 
 
-\## 2. Правило `if` и раннего выхода
-
-
-
-Запрещено писать:
-
-
-
-```csharp
-
-if (someBool) return;
-
-```
-
-
-
-Правильно:
-
-
-
-```csharp
-
-if (someBool)
-
-return;
-
-```
-
-
-
-То же правило применяется для:
-
-
-
-\- `break`
-
-\- `continue`
-
-\- `throw`
-
-
-
-Скобки не добавлять, просто переносить оператор на следующую строку.
-
-
-
----
-
-
-
 \## 3. Именование
 
 
@@ -212,34 +162,84 @@ public bool IsActive { get; private set; }
 \- Внутренние (nested) классы должны располагаться внизу родительского класса.
 
 
-
----
-
+# Еще правила codestyle:
 
 
-\## 7. Итоговый чеклист
+1. Нужно логировать важные точки реаботы приложения. Нужно логировать так, чтобы по логу можно было читать ход работы приложения
+    - [ ]  Переходы из разных состояний игры
+    - [ ]  Начало или завершение важных частей приложения
+    - [ ]  Логировать ошибки если они случаются
+2. Писать лог в такой нотации:
+    
+    `Debug.Log("[ClassName] Message.");`
+    
+    Пример: `Debug.Log("[GameInitialization] Game initialization completed successfully.");`
+    
+3. Делать new без типа
+    - [ ]  Не правильно: `CancellationTokenSource cts = new CancellationTokenSource();`
+    - [ ]  Правильно: `CancellationTokenSource cts = new();`
+4. Не писать лог полной записью. Делать using UnityEngine; и укороченную запись: `Debug.Log("[Initialization] Game initialization completed successfully.");`
+5. Если контент if блока занимает одну строку, то не нужно ставить скобки:
+    - [ ]  Не прваильно:
+        
+        ```jsx
+        if (success)
+                    {
+                        UnityEngine.Debug.Log("[Initialization] Game initialization completed successfully.");
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.LogError("[Initialization] Game initialization failed.");
+                    }
+                    
+        ```
+        
+    - [ ]  Не прваильно:
+        
+        ```jsx
+                    if (success)
+                        UnityEngine.Debug.Log("[Initialization] Game initialization completed successfully.");
+                    else
+                        UnityEngine.Debug.LogError("[Initialization] Game initialization failed.");
+        
+                    
+        ```
+        
+6. Не писать комментарии внутри классов и функций. Комментарии нужно только чтобы описывать классы, структуры и енамы
+7. Не нужно писать комментарии для внутренних классов, структур и енамов
+8. Писать комментарии на английском языке
+9. Не писать sealed для классов и структур. Это излишне
+10. Писать скобки в пустых методах таким образом: 
+`public override void InstallBindings() { }`
+11. Ставить пустые строки между группами полей, свойств и методов:
+    
+    Пример:
+    
+    ```jsx
+            public ReactiveProperty<float> Progress = new(0f);
+	    public int SomeField;
 
+            public int I { get; private set; }
+	    public int SomeProp { get; set; }
+    
+            public void Dispose()
+            {
+                CurrentStepName.Dispose();
+                Progress.Dispose();
+            }
+    ```
+    
+12. Стараться меньше проверять на null, и допускать аварийное завершение при наличии null. В большинстве случаев нужно предполагать что объект который тебе передают не пустой
+    
+    Вот здесь мы видим черезмерные проверки:
+    `float totalWeight = _model.Steps.Sum(step => step == null ? 0f : Mathf.Max(0f, step.Weight))`
+    
+13. Использовать expression body у свойств если это возможно. Не использовать expression body у методов
+14. Нужно добавлять постфикс к коллекциям:
+    - [ ]  _someList; _someArr; _someMap(For Dictionarry), _someHashSet; и так далее
+15. Для CancelationToken когда он парраметр в асинхронном методе нужно писать default
+    - [ ]  Пример: `public UniTask<bool> RunAsync(CancellationToken cancellationToken = default)`
 
-
-\- Нет `#region`
-
-\- Нет `var`
-
-\- Нет expression-bodied members
-
-\- Нельзя писать `if (...) return;`
-
-\- Приватные поля с `\_`
-
-\- Публичные поля и свойства в `PascalCase`
-
-\- Unity-настройки через `\[SerializeField] private`
-
-\- `\[SerializeField]` поля расположены выше публичных полей
-
-\- Соблюдён порядок членов класса
-
-\- Внутренние классы расположены внизу
 
 - - - - 
 
