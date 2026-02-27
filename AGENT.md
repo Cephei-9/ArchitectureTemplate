@@ -217,8 +217,10 @@ public bool IsActive { get; private set; }
     
     ```jsx
             public ReactiveProperty<float> Progress = new(0f);
-    
+	    public int SomeField;
+
             public int I { get; private set; }
+	    public int SomeProp { get; set; }
     
             public void Dispose()
             {

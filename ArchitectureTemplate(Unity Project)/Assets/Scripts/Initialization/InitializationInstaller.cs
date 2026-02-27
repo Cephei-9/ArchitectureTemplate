@@ -5,10 +5,9 @@ using Zenject;
 namespace ArchitectureTemplate.Initialization
 {
     /// <summary>
-    /// Инсталлер системы инициализации (как понятия приложения).
-    /// Содержит стартовую точку и тестовые шаги, и подключает пайплайн.
+    /// Installer for the initialization application module.
     /// </summary>
-    public sealed class InitializationInstaller : Installer
+    public class InitializationInstaller : Installer
     {
         public override void InstallBindings()
         {

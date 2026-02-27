@@ -7,9 +7,9 @@ using UnityEngine;
 namespace Initialization.InitializationPipeline
 {
     /// <summary>
-    /// Пайплайн, который последовательно выполняет шаги инициализации и обновляет модель прогресса.
+    /// Runs initialization steps sequentially and updates execution progress.
     /// </summary>
-    public sealed class InitializationPipelineRunner
+    public class InitializationPipelineRunner
     {
         private readonly InitializationPipelineModel _model;
 
@@ -18,55 +18,49 @@ namespace Initialization.InitializationPipeline
             _model = model;
         }
 
-        public async UniTask<bool> RunAsync(List<IInitializationPipelineStep> stepsList, CancellationToken cancellationToken)
+        public async UniTask<bool> RunAsync(List<IInitializationPipelineStep> stepsList, CancellationToken cancellationToken = default)
         {
             if (stepsList.Count == 0)
             {
                 _model.CurrentStepName.Value = string.Empty;
                 _model.Progress.Value = 1f;
+
+                Debug.Log("[InitializationPipelineRunner] Pipeline has no steps. Completed immediately.");
+                
                 return true;
             }
 
-            float totalWeight = stepsList.Sum(step => step == null ? 0f : Mathf.Max(0f, step.Weight));
+            float totalWeight = stepsList.Sum(step => Mathf.Max(0f, step.Weight));
             float completedWeight = 0f;
 
             _model.Progress.Value = 0f;
-
+            
             foreach (IInitializationPipelineStep step in stepsList)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return false;
-                }
-
-                if (step == null)
-                {
-                    return false;
-                }
-
-                if (step.Weight <= 0f)
-                {
-                    return false;
-                }
-
-                _model.CurrentStepName.Value = step.Name ?? string.Empty;
-                _model.Progress.Value = totalWeight <= 0f ? 0f : Mathf.Clamp01(completedWeight / totalWeight);
+                _model.CurrentStepName.Value = step.Name;
+                _model.Progress.Value = Mathf.Clamp01(completedWeight / totalWeight);
+                
+                Debug.Log($"[InitializationPipelineRunner] Step started: {step.Name}.");
 
                 try
                 {
                     await step.ExecuteAsync(cancellationToken);
                 }
-                catch
+                catch (System.Exception exception)
                 {
+                    Debug.LogError($"[InitializationPipelineRunner] Step failed: {step.Name}. Exception: {exception.Message}");
                     return false;
                 }
 
                 completedWeight += step.Weight;
-                _model.Progress.Value = totalWeight <= 0f ? 1f : Mathf.Clamp01(completedWeight / totalWeight);
+                
+                Debug.Log($"[InitializationPipelineRunner] Step completed: {step.Name}.");
             }
 
             _model.CurrentStepName.Value = string.Empty;
             _model.Progress.Value = 1f;
+
+            Debug.Log("[InitializationPipelineRunner] Pipeline completed successfully.");
             return true;
         }
     }

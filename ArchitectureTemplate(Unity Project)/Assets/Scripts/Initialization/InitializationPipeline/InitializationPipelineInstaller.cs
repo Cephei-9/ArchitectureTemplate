@@ -3,15 +3,15 @@ using Zenject;
 namespace Initialization.InitializationPipeline
 {
     /// <summary>
-    /// Инсталлер пайплайна. Регистрирует модель, раннер и сервис пайплайна.
+    /// Installer for the initialization pipeline model, runner, and service.
     /// </summary>
-    public sealed class InitializationPipelineInstaller : Installer
+    public class InitializationPipelineInstaller : Installer
     {
         public override void InstallBindings()
         {
-            InitializationPipelineModel model = new InitializationPipelineModel();
-            InitializationPipelineRunner runner = new InitializationPipelineRunner(model);
-            InitializationPipelineService service = new InitializationPipelineService(model, runner);
+            InitializationPipelineModel model = new();
+            InitializationPipelineRunner runner = new(model);
+            InitializationPipelineService service = new(model, runner);
 
             Container.Bind<InitializationPipelineService>()
                 .FromInstance(service)
@@ -19,4 +19,3 @@ namespace Initialization.InitializationPipeline
         }
     }
 }
-

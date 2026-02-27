@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UniRx;
+using UnityEngine;
 
 namespace Initialization.InitializationPipeline
 {
     /// <summary>
-    /// Сервис приложения для управления пайплайном инициализации и отслеживания его прогресса.
+    /// Application service that exposes initialization pipeline state and execution API.
     /// </summary>
-    public sealed class InitializationPipelineService : IDisposable
+    public class InitializationPipelineService : IDisposable
     {
         private readonly InitializationPipelineModel _model;
         private readonly InitializationPipelineRunner _runner;
@@ -20,32 +21,18 @@ namespace Initialization.InitializationPipeline
             _runner = runner;
         }
 
-        public IReadOnlyReactiveProperty<string> CurrentStepName
+        public IReadOnlyReactiveProperty<string> CurrentStepName => _model.CurrentStepName;
+        public List<IInitializationPipelineStep> StepsList => _model.StepsList;
+        public IReadOnlyReactiveProperty<float> Progress => _model.Progress;
+
+        public UniTask<bool> RunAsync(CancellationToken cancellationToken = default)
         {
-            get
-            {
-                return _model.CurrentStepName;
-            }
+            return _runner.RunAsync(_model.StepsList, cancellationToken);
         }
 
-        public List<IInitializationPipelineStep> Steps => _model.Steps;
-
-        public IReadOnlyReactiveProperty<float> Progress
+        public UniTask<bool> RunAsync(List<IInitializationPipelineStep> stepsList, CancellationToken cancellationToken = default)
         {
-            get
-            {
-                return _model.Progress;
-            }
-        }
-
-        public UniTask<bool> RunAsync(CancellationToken cancellationToken)
-        {
-            return _runner.RunAsync(_model.Steps, cancellationToken);
-        }
-
-        public UniTask<bool> RunAsync(List<IInitializationPipelineStep> steps, CancellationToken cancellationToken)
-        {
-            return _runner.RunAsync(steps, cancellationToken);
+            return _runner.RunAsync(stepsList, cancellationToken);
         }
 
         public void Dispose()
