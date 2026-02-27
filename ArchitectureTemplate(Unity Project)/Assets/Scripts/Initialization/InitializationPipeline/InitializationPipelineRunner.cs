@@ -62,8 +62,6 @@ namespace Initialization.InitializationPipeline
         {
             _model.CurrentStepName.Value = step.Name;
             _model.Progress.Value = Mathf.Clamp01(completedWeight / totalWeight);
-            
-            Debug.Log($"[InitializationPipelineRunner] Step started: {step.Name}.");
 
             try
             {
