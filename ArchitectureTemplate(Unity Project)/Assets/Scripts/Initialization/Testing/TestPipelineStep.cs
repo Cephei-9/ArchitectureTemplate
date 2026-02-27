@@ -14,10 +14,11 @@ namespace ArchitectureTemplate.Initialization.Testing
         public string Name => "TestPipelineStep";
         public float Weight => 1f;
 
-        public async UniTask ExecuteAsync(CancellationToken cancellationToken = default)
+        public async UniTask<bool> ExecuteAsync(CancellationToken cancellationToken = default)
         {
             TimeSpan delay = TimeSpan.FromMilliseconds(250);
             await UniTask.Delay(delay, cancellationToken: cancellationToken);
+            return true;
         }
     }
 }

@@ -11,6 +11,6 @@ namespace Initialization.InitializationPipeline
         string Name { get; }
         float Weight { get; }
         
-        UniTask ExecuteAsync(CancellationToken cancellationToken = default);
+        UniTask<bool> ExecuteAsync(CancellationToken cancellationToken = default);
     }
 }
