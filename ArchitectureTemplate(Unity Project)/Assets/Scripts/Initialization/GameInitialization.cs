@@ -29,20 +29,15 @@ namespace ArchitectureTemplate.Initialization
         private async UniTaskVoid RunInitializationAsync()
         {
             List<IInitializationPipelineStep> steps = new List<IInitializationPipelineStep> { _testStep };
-            _pipelineService.SetSteps(steps);
+            
+            using CancellationTokenSource cts = new();
 
-            using CancellationTokenSource cts = new CancellationTokenSource();
-
-            bool success = await _pipelineService.RunAsync(cts.Token);
+            bool success = await _pipelineService.RunAsync(steps, cts.Token);
 
             if (success)
-            {
                 UnityEngine.Debug.Log("[Initialization] Game initialization completed successfully.");
-            }
             else
-            {
                 UnityEngine.Debug.LogError("[Initialization] Game initialization failed.");
-            }
         }
     }
 }

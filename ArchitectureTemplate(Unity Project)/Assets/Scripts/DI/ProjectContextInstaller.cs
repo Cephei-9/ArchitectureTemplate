@@ -8,10 +8,7 @@ namespace ArchitectureTemplate.Initialization
     /// </summary>
     public sealed class ProjectContextInstaller : MonoInstaller
     {
-        public override void InstallBindings()
-        {
-            
-        }
+        public override void InstallBindings() { }
     }
 }
 

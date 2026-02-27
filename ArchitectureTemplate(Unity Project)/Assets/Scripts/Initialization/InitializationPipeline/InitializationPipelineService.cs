@@ -28,6 +28,8 @@ namespace Initialization.InitializationPipeline
             }
         }
 
+        public List<IInitializationPipelineStep> Steps => _model.Steps;
+
         public IReadOnlyReactiveProperty<float> Progress
         {
             get
@@ -36,14 +38,14 @@ namespace Initialization.InitializationPipeline
             }
         }
 
-        public void SetSteps(IReadOnlyList<IInitializationPipelineStep> steps)
-        {
-            _model.Steps = steps ?? Array.Empty<IInitializationPipelineStep>();
-        }
-
         public UniTask<bool> RunAsync(CancellationToken cancellationToken)
         {
-            return _runner.RunAsync(cancellationToken);
+            return _runner.RunAsync(_model.Steps, cancellationToken);
+        }
+
+        public UniTask<bool> RunAsync(List<IInitializationPipelineStep> steps, CancellationToken cancellationToken)
+        {
+            return _runner.RunAsync(steps, cancellationToken);
         }
 
         public void Dispose()

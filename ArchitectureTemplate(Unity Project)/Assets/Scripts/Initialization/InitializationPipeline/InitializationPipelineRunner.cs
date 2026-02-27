@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -17,21 +18,21 @@ namespace Initialization.InitializationPipeline
             _model = model;
         }
 
-        public async UniTask<bool> RunAsync(CancellationToken cancellationToken)
+        public async UniTask<bool> RunAsync(List<IInitializationPipelineStep> stepsList, CancellationToken cancellationToken)
         {
-            if (_model.Steps.Count == 0)
+            if (stepsList.Count == 0)
             {
                 _model.CurrentStepName.Value = string.Empty;
                 _model.Progress.Value = 1f;
                 return true;
             }
 
-            float totalWeight = _model.Steps.Sum((IInitializationPipelineStep step) => step == null ? 0f : Mathf.Max(0f, step.Weight));
+            float totalWeight = stepsList.Sum(step => step == null ? 0f : Mathf.Max(0f, step.Weight));
             float completedWeight = 0f;
 
             _model.Progress.Value = 0f;
 
-            foreach (IInitializationPipelineStep step in _model.Steps)
+            foreach (IInitializationPipelineStep step in stepsList)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
