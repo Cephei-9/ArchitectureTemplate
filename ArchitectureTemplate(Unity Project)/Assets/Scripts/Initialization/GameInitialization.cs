@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using ArchitectureTemplate.AssetManagement;
+using ArchitectureTemplate.MainMenu;
 using ArchitectureTemplate.UI;
 using Cysharp.Threading.Tasks;
 using Initialization.InitializationPipeline;
+using SceneLoading;
 using UnityEngine;
 using Zenject;
 
@@ -15,19 +17,20 @@ namespace ArchitectureTemplate.Initialization
     public class GameInitialization : IInitializable
     {
         private readonly InitializationPipelineService _pipelineService;
-        private readonly IInitializationPipelineStep _testStep;
+        private readonly SceneLoader _sceneLoader;
         private readonly WindowService _windowService;
-        private AddressablesInitializationStep _addressablesInitializationStep;
-        private AssetService _assetService;
+        private readonly AddressablesInitializationStep _addressablesInitializationStep;
+        private readonly AssetService _assetService;
 
         public GameInitialization(InitializationPipelineService pipelineService, 
             AddressablesInitializationStep addressablesInitializationStep,
-            WindowService windowService, AssetService assetService)
+            WindowService windowService, AssetService assetService, SceneLoader sceneLoader)
         {
             _addressablesInitializationStep = addressablesInitializationStep;
             _pipelineService = pipelineService;
             _windowService = windowService;
             _assetService = assetService;
+            _sceneLoader = sceneLoader;
         }
 
         public void Initialize()
@@ -54,6 +57,8 @@ namespace ArchitectureTemplate.Initialization
             if (isSuccess)
             {
                 Debug.Log("[GameInitialization] Game initialization completed successfully.");
+                LoadMainMenuAsync(cts.Token).Forget();
+
                 return;
             }
 
@@ -65,6 +70,16 @@ namespace ArchitectureTemplate.Initialization
             List<IInitializationPipelineStep> stepsList = new() { _addressablesInitializationStep };
             
             return stepsList;
+        }
+
+        private async UniTaskVoid LoadMainMenuAsync(CancellationToken token)
+        {
+            await _sceneLoader.LoadEmptySceneAsync();
+            // Unload all initialization assets
+            await _sceneLoader.LoadSceneAsync(SceneIds.MainMenu, token);
+            
+            MainMenuEntryPoint mainMenuEntryPoint = Object.FindFirstObjectByType<MainMenuEntryPoint>();
+            mainMenuEntryPoint.EnterMainMenu();
         }
     }
 }

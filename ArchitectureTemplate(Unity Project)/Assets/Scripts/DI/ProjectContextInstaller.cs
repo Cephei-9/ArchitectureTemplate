@@ -1,6 +1,7 @@
 using ArchitectureTemplate.AssetManagement;
 using ArchitectureTemplate.DI;
 using ArchitectureTemplate.UI;
+using SceneLoading;
 using UnityEngine;
 using Zenject;
 
@@ -20,7 +21,9 @@ namespace ArchitectureTemplate.Initialization
             Container.BindInterfacesAndSelfTo<ZenjectDiContainer>()
                 .AsSingle()
                 .WithArguments(Container);
-
+            Container.Bind<SceneLoader>()
+                .AsSingle();
+            
             Debug.Log("[ProjectContext] Installation completed.");
         }
     }

@@ -19,6 +19,11 @@ namespace SceneLoading
         public IReadOnlyReactiveProperty<bool> IsLoading => _isLoading;
         public IReadOnlyReactiveProperty<float> Progress => _progress;
 
+        public UniTask<bool> LoadEmptySceneAsync(CancellationToken cancellationToken = default)
+        {
+            return LoadSceneAsync(SceneIds.Empty, cancellationToken);
+        }
+
         public async UniTask<bool> LoadSceneAsync(string sceneId, CancellationToken cancellationToken = default)
         {
             if (_isLoading.Value)
@@ -31,20 +36,20 @@ namespace SceneLoading
             
             try
             {
-                bool isLoaded = await LoadInternalAsync(sceneId, cancellationToken);
+                bool isLoaded = await LoadSceneAndTrackProgressAsync(sceneId, cancellationToken);
 
                 if (isLoaded)
                 {
-                    CompleteLoadingSuccessfully(sceneId);
+                    Debug.Log("[SceneLoader] Scene loaded successfully: " + sceneId);
                     return true;
                 }
 
-                CompleteLoadingWithFailure(sceneId);
+                Debug.LogError($"[SceneLoader] Failed to load scene: {sceneId}");
                 return false;
             }
             catch (Exception exception)
             {
-                CompleteLoadingWithFailure(sceneId, exception);
+                Debug.LogError($"[SceneLoader] Failed to load scene: {sceneId} exception: {exception}");
                 return false;
             }
             finally
@@ -54,22 +59,7 @@ namespace SceneLoading
             }
         }
 
-        private void CompleteLoadingSuccessfully(string sceneId)
-        {
-            Debug.Log("[SceneLoader] Scene loaded successfully: " + sceneId);
-        }
-
-        private void CompleteLoadingWithFailure(string sceneId)
-        {
-            Debug.LogError($"[SceneLoader] Failed to load scene: {sceneId}");
-        }
-
-        private void CompleteLoadingWithFailure(string sceneId, Exception exception)
-        {
-            Debug.LogError($"[SceneLoader] Failed to load scene: {sceneId} exception: {exception}");
-        }
-
-        private async UniTask<bool> LoadInternalAsync(string sceneId, CancellationToken cancellationToken)
+        private async UniTask<bool> LoadSceneAndTrackProgressAsync(string sceneId, CancellationToken cancellationToken)
         {
             AsyncOperation operation = SceneManager.LoadSceneAsync(sceneId, LoadSceneMode.Single);
 
