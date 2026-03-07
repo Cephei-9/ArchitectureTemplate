@@ -9,7 +9,7 @@ namespace ArchitectureTemplate.UI
     /// <summary>
     /// Instantiates window prefabs via Zenject and wires view with presentation model.
     /// </summary>
-    public class WindowFactory : IWindowFactory
+    public class WindowFactory
     {
         private readonly DiContainer _container;
         private readonly IAssetProvider _assets;

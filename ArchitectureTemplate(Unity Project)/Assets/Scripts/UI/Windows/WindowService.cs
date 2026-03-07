@@ -6,12 +6,12 @@ namespace ArchitectureTemplate.UI
     /// <summary>
     /// Manages open windows. Subscribes to handle close events to remove from tracking.
     /// </summary>
-    public class WindowService : IWindowService
+    public class WindowService
     {
-        private readonly IWindowFactory _factory;
+        private readonly WindowFactory _factory;
         private readonly Dictionary<WindowId, WindowHandle> _openMap = new();
 
-        public WindowService(IWindowFactory factory)
+        public WindowService(WindowFactory factory)
         {
             _factory = factory;
         }

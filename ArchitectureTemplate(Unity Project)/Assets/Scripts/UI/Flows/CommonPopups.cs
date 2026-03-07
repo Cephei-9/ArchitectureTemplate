@@ -3,11 +3,11 @@ namespace ArchitectureTemplate.UI
     /// <summary>
     /// Shows error and toast popups via window service.
     /// </summary>
-    public class CommonPopups : ICommonPopups
+    public class CommonPopups
     {
-        private readonly IWindowService _windows;
+        private readonly WindowService _windows;
 
-        public CommonPopups(IWindowService windows)
+        public CommonPopups(WindowService windows)
         {
             _windows = windows;
         }

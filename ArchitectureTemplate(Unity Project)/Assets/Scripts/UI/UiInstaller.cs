@@ -23,14 +23,13 @@ namespace ArchitectureTemplate.UI
 
             Container.Bind<IAssetProvider>().FromInstance(_resourcesAssetProvider).AsSingle();
 
-            Container.Bind<IWindowFactory>()
-                .To<WindowFactory>()
+            Container.Bind<WindowFactory>()
                 .AsSingle()
                 .WithArguments(_windowLinks.Links);
 
-            Container.Bind<IWindowService>().To<WindowService>().AsSingle();
-            Container.Bind<IMainMenuFlow>().To<MainMenuFlow>().AsSingle();
-            Container.Bind<ICommonPopups>().To<CommonPopups>().AsSingle();
+            Container.Bind<WindowService>().AsSingle();
+            Container.Bind<MainMenuFlow>().AsSingle();
+            Container.Bind<CommonPopups>().AsSingle();
         }
     }
 }

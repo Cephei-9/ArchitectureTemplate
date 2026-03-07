@@ -5,11 +5,11 @@ namespace ArchitectureTemplate.UI
     /// <summary>
     /// Orchestrates main menu and settings window opening and closing.
     /// </summary>
-    public class MainMenuFlow : IMainMenuFlow
+    public class MainMenuFlow
     {
-        private readonly IWindowService _windows;
+        private readonly WindowService _windows;
 
-        public MainMenuFlow(IWindowService windows)
+        public MainMenuFlow(WindowService windows)
         {
             _windows = windows;
         }
