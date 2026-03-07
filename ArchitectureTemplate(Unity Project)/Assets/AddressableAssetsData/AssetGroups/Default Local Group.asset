@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Default Local Group
+  m_GUID: 4982bebec0df133479d5d0208dd4fe54
+  m_SerializeEntries:
+  - m_GUID: 0df632be68f5d0241898d4c289c71915
+    m_Address: Image
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Initialization
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 44483e523e6c0ba4e9368eca5b3dad92
+    m_Address: InitializationScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 614337c3d4b81a84f8739e19b12f8b23
+    m_Address: SettingsWindow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a75738abf12fd4947b6237c9703541d2
+    m_Address: GameplayHud
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ecf29a06db5f678488e37d95cdca8227
+    m_Address: LoadingCurtain
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f77dec2da67f2314ebdfb1869642f16a, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c2b6489b19829a4488609f609d3df281, type: 2}
+    - {fileID: 11400000, guid: e3b132d26051ccf4782f5054953b3a13, type: 2}
