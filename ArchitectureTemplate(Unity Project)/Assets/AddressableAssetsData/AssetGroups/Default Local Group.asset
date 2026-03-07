@@ -21,6 +21,26 @@ MonoBehaviour:
     m_SerializedLabels:
     - Initialization
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 44483e523e6c0ba4e9368eca5b3dad92
+    m_Address: InitializationScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 614337c3d4b81a84f8739e19b12f8b23
+    m_Address: SettingsWindow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a75738abf12fd4947b6237c9703541d2
+    m_Address: GameplayHud
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ecf29a06db5f678488e37d95cdca8227
+    m_Address: LoadingCurtain
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f77dec2da67f2314ebdfb1869642f16a, type: 2}
   m_SchemaSet:

@@ -30,7 +30,8 @@ namespace ArchitectureTemplate.AssetManagement
 
             _initHandle = Addressables.InitializeAsync();
             
-            await _initHandle.Task;
+            if(!_initHandle.IsDone)
+                await _initHandle.Task;
 
             if (_initHandle.Status != AsyncOperationStatus.Succeeded)
                 throw new InvalidOperationException("Addressables.InitializeAsync failed.");
