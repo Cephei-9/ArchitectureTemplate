@@ -56,12 +56,17 @@ namespace ArchitectureTemplate.UI
             return handle;
         }
 
-        public void CloseWindow<TPresentationModel>() where TPresentationModel : IPresentationModel
+        public WindowHandle CloseWindow<TPresentationModel>() where TPresentationModel : IPresentationModel
         {
             Type key = typeof(TPresentationModel);
 
-            if (_openMap.TryGetValue(key, out (WindowHandle Handle, IPresentationModel Presenter) existing)) 
+            if (_openMap.TryGetValue(key, out (WindowHandle Handle, IPresentationModel Presenter) existing))
+            {
                 existing.Handle.CloseWindow();
+                return existing.Handle;
+            }
+
+            return null;
         }
     }
 }

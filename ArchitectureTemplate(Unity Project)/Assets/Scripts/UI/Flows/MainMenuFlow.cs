@@ -24,9 +24,9 @@ namespace ArchitectureTemplate.UI
             _windows.OpenWindow<SettingsPopupPresenter>(out _);
         }
 
-        public UniTask CloseSettingsAsync()
+        public void CloseSettingsAsync()
         {
-            return _windows.CloseWindow<SettingsPopupPresenter>();
+            _windows.CloseWindow<SettingsPopupPresenter>();
         }
     }
 }
