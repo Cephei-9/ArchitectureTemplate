@@ -7,48 +7,37 @@ using Object = UnityEngine.Object;
 
 namespace ArchitectureTemplate.UI
 {
-    /// <summary>
-    /// Instantiates window views via Zenject, resolves presenters via DI, and wires them together.
-    /// </summary>
     public class WindowFactory
     {
         private readonly DiContainer _container;
         private readonly IAssetService _assetService;
 
-        public WindowFactory(
-            DiContainer container,
-            IAssetService assetService)
+        public WindowFactory(DiContainer container, IAssetService assetService)
         {
             _container = container;
             _assetService = assetService;
         }
 
-        /// <summary>
-        /// Creates a window with a presenter that does not require arguments.
-        /// </summary>
-        public WindowHandle Create<TPresentationModel>(out TPresentationModel presenter)
+        public WindowHandle Create<TPresentationModel>(out TPresentationModel presentationModel)
             where TPresentationModel : IDefaultPresentationModel
         {
             CancellationTokenSource cts = new();
             
-            presenter = _container.Resolve<TPresentationModel>();
-            presenter.Initialize(cts.Token);
+            presentationModel = _container.Resolve<TPresentationModel>();
+            presentationModel.Initialize(cts.Token);
             
-            return CreateInternal(presenter, cts);
+            return CreateInternal(presentationModel, cts);
         }
 
-        /// <summary>
-        /// Creates a window with an argumented presenter.
-        /// </summary>
-        public WindowHandle Create<TPresentationModel, TArgs>(TArgs args, out TPresentationModel presenter)
+        public WindowHandle Create<TPresentationModel, TArgs>(TArgs args, out TPresentationModel presentationModel)
             where TPresentationModel : IArgumentedPresentationModel<TArgs>
         {
             CancellationTokenSource cts = new();
             
-            presenter = _container.Resolve<TPresentationModel>();
-            presenter.InitializeArgument(args, cts.Token);
+            presentationModel = _container.Resolve<TPresentationModel>();
+            presentationModel.InitializeArgument(args, cts.Token);
 
-            return CreateInternal(presenter, cts);
+            return CreateInternal(presentationModel, cts);
         }
 
         private WindowHandle CreateInternal<TPresentationModel>(TPresentationModel presentationModel,

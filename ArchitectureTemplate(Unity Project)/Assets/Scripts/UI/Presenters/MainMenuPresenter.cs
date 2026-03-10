@@ -1,5 +1,3 @@
-using System;
-
 namespace ArchitectureTemplate.UI
 {
     /// <summary>
@@ -7,15 +5,9 @@ namespace ArchitectureTemplate.UI
     /// </summary>
     public class MainMenuPresenter : IPresentationModel
     {
-        public AssetId ViewAssetKey => AssetId.Ui_MainMenu;
+        public ArchitectureTemplate.AssetManagement.AssetKey ViewAssetKey => ArchitectureTemplate.AssetManagement.AssetKey.MainMenuWindow;
 
-        public void Initialize()
-        {
-        }
-
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }
 

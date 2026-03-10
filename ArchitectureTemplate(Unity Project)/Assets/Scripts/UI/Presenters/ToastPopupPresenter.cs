@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-
 namespace ArchitectureTemplate.UI
 {
     /// <summary>
@@ -8,22 +5,16 @@ namespace ArchitectureTemplate.UI
     /// </summary>
     public class ToastPopupPresentationModel : IArgumentedPresentationModel<MessageArgs>
     {
-        public AssetId ViewAssetKey => AssetId.Ui_ToastPopup;
+        public ArchitectureTemplate.AssetManagement.AssetKey ViewAssetKey => ArchitectureTemplate.AssetManagement.AssetKey.ToastPopupWindow;
 
         public MessageArgs Args { get; private set; }
 
-        public void Initialize()
-        {
-        }
-
-        public void InitializeArgument(MessageArgs argument, CancellationToken ctsToken)
+        public void InitializeArgument(MessageArgs argument, System.Threading.CancellationToken token)
         {
             Args = argument;
         }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }
 

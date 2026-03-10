@@ -4,13 +4,10 @@ using Cysharp.Threading.Tasks;
 
 namespace ArchitectureTemplate.UI
 {
-    /// <summary>
-    /// Manages open windows. Caches window handles and presenters by presenter type.
-    /// </summary>
     public class WindowService
     {
         private readonly WindowFactory _factory;
-        private readonly Dictionary<Type, (WindowHandle Handle, IPresentationModel Presenter)> _openMap = new();
+        private readonly Dictionary<Type, (WindowHandle Handle, IPresentationModel PresentationModel)> _openMap = new();
 
         public WindowService(WindowFactory factory)
         {
@@ -22,54 +19,46 @@ namespace ArchitectureTemplate.UI
             return _openMap.ContainsKey(typeof(TPresenter));
         }
 
-        /// <summary>
-        /// Opens a window with a presenter that does not require arguments.
-        /// Returns WindowHandle and presenter via out parameter.
-        /// </summary>
-        public WindowHandle OpenWindow<TPresenter>(out TPresenter presenter)
-            where TPresenter : class, IDefaultPresentationModel
+        public WindowHandle OpenWindow<TPresentationModel>(out TPresentationModel presentationModel)
+            where TPresentationModel : class, IDefaultPresentationModel
         {
-            Type key = typeof(TPresenter);
+            Type key = typeof(TPresentationModel);
 
-            if (_openMap.TryGetValue(key, out (WindowHandle Handle, IPresentationModel Presenter) existing))
+            if (_openMap.TryGetValue(key, out (WindowHandle Handle, IPresentationModel PresentationModel) existing))
             {
-                presenter = (TPresenter)existing.Presenter;
+                presentationModel = (TPresentationModel)existing.PresentationModel;
                 return existing.Handle;
             }
 
-            WindowHandle handle = _factory.Create(out presenter);
+            WindowHandle handle = _factory.Create(out presentationModel);
             
-            _openMap[key] = (handle, presenter);
+            _openMap[key] = (handle, presentationModel);
             handle.OnClosedEvent += () => _openMap.Remove(key);
 
             return handle;
         }
 
-        /// <summary>
-        /// Opens a window with an argumented presenter.
-        /// Returns WindowHandle and presenter via out parameter.
-        /// </summary>
-        public WindowHandle OpenWindow<TPresenter, TArgs>(TArgs args, out TPresenter presenter)
-            where TPresenter : class, IArgumentedPresentationModel<TArgs>
+        public WindowHandle OpenWindow<TPresentationModel, TArgs>(TArgs args, out TPresentationModel presentationModel)
+            where TPresentationModel : class, IArgumentedPresentationModel<TArgs>
         {
-            Type key = typeof(TPresenter);
+            Type key = typeof(TPresentationModel);
 
-            if (_openMap.TryGetValue(key, out (WindowHandle Handle, IPresentationModel Presenter) existing))
+            if (_openMap.TryGetValue(key, out (WindowHandle Handle, IPresentationModel PresentationModel) existing))
             {
-                presenter = (TPresenter)existing.Presenter;
+                presentationModel = (TPresentationModel)existing.PresentationModel;
                 return existing.Handle;
             }
 
-            WindowHandle handle = _factory.Create(args, out presenter);
-            _openMap[key] = (handle, presenter);
+            WindowHandle handle = _factory.Create(args, out presentationModel);
+            _openMap[key] = (handle, presentationModel);
             handle.OnClosedEvent += () => _openMap.Remove(key);
 
             return handle;
         }
 
-        public void CloseWindow<TPresenter>() where TPresenter : IPresentationModel
+        public void CloseWindow<TPresentationModel>() where TPresentationModel : IPresentationModel
         {
-            Type key = typeof(TPresenter);
+            Type key = typeof(TPresentationModel);
 
             if (_openMap.TryGetValue(key, out (WindowHandle Handle, IPresentationModel Presenter) existing)) 
                 existing.Handle.CloseWindow();
