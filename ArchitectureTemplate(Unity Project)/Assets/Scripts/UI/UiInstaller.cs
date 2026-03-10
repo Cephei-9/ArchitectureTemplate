@@ -1,5 +1,3 @@
-using System;
-using UnityEngine;
 using Zenject;
 
 namespace ArchitectureTemplate.UI
@@ -15,13 +13,11 @@ namespace ArchitectureTemplate.UI
             Container.Bind<WindowFactory>().AsSingle();
             Container.Bind<WindowService>().AsSingle();
             
-            Container.Bind<MainMenuPresenter>().AsTransient();
-            Container.Bind<SettingsPopupPresenter>().AsTransient();
-            Container.Bind<ErrorPopupPresentationModel>().AsTransient();
-            Container.Bind<ToastPopupPresentationModel>().AsTransient();
-            
-            Container.Bind<MainMenuFlow>().AsSingle();
-            Container.Bind<CommonPopups>().AsSingle();
+            Container.BindFactory<UIRoot, UIRootFactory>().AsSingle();
+            Container.Bind<UIRoot>()
+                .FromFactory<UIRootFactory>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

@@ -16,12 +16,12 @@ namespace ArchitectureTemplate.UI
 
         public void OpenMainMenu()
         {
-            _windows.OpenWindow<MainMenuPresenter>(out _);
+            _windows.OpenWindow<MainMenuPresenter>(UILayer.Screen, out _);
         }
 
         public void OpenSettings()
         {
-            _windows.OpenWindow<SettingsPopupPresenter>(out _);
+            _windows.OpenWindow<SettingsPopupPresenter>(UILayer.Popups, out _);
         }
 
         public void CloseSettingsAsync()

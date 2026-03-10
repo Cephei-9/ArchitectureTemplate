@@ -13,6 +13,7 @@ namespace ArchitectureTemplate.AssetManagement
 
         MainMenuWindow,
         ErrorPopupWindow,
-        ToastPopupWindow
+        ToastPopupWindow,
+        UIRoot
     }
 }

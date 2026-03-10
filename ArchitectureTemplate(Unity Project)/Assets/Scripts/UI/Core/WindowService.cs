@@ -19,7 +19,7 @@ namespace ArchitectureTemplate.UI
             return _openMap.ContainsKey(typeof(TPresenter));
         }
 
-        public WindowHandle OpenWindow<TPresentationModel>(out TPresentationModel presentationModel)
+        public WindowHandle OpenWindow<TPresentationModel>(UILayer layer, out TPresentationModel presentationModel)
             where TPresentationModel : class, IDefaultPresentationModel
         {
             Type key = typeof(TPresentationModel);
@@ -30,7 +30,7 @@ namespace ArchitectureTemplate.UI
                 return existing.Handle;
             }
 
-            WindowHandle handle = _factory.Create(out presentationModel);
+            WindowHandle handle = _factory.Create(layer, out presentationModel);
             
             _openMap[key] = (handle, presentationModel);
             handle.OnClosedEvent += () => _openMap.Remove(key);
@@ -38,7 +38,7 @@ namespace ArchitectureTemplate.UI
             return handle;
         }
 
-        public WindowHandle OpenWindow<TPresentationModel, TArgs>(TArgs args, out TPresentationModel presentationModel)
+        public WindowHandle OpenWindow<TPresentationModel, TArgs>(TArgs args, UILayer layer, out TPresentationModel presentationModel)
             where TPresentationModel : class, IArgumentedPresentationModel<TArgs>
         {
             Type key = typeof(TPresentationModel);
@@ -49,7 +49,7 @@ namespace ArchitectureTemplate.UI
                 return existing.Handle;
             }
 
-            WindowHandle handle = _factory.Create(args, out presentationModel);
+            WindowHandle handle = _factory.Create(args, layer, out presentationModel);
             _openMap[key] = (handle, presentationModel);
             handle.OnClosedEvent += () => _openMap.Remove(key);
 

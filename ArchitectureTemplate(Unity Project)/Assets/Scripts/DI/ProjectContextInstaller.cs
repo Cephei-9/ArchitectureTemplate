@@ -1,3 +1,5 @@
+using ArchitectureTemplate.AssetManagement;
+using ArchitectureTemplate.UI;
 using Zenject;
 
 namespace ArchitectureTemplate.Initialization
@@ -8,7 +10,10 @@ namespace ArchitectureTemplate.Initialization
     /// </summary>
     public sealed class ProjectContextInstaller : MonoInstaller
     {
-        public override void InstallBindings() { }
+        public override void InstallBindings()
+        {
+            Container.Bind<IAssetService>().To<AddressablesAssetService>().AsSingle();
+        }
     }
 }
 

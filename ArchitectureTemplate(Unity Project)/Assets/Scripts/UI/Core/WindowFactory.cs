@@ -11,14 +11,16 @@ namespace ArchitectureTemplate.UI
     {
         private readonly DiContainer _container;
         private readonly IAssetService _assetService;
+        private readonly UIRoot _uiRoot;
 
-        public WindowFactory(DiContainer container, IAssetService assetService)
+        public WindowFactory(DiContainer container, IAssetService assetService, UIRoot uiRoot)
         {
             _container = container;
             _assetService = assetService;
+            _uiRoot = uiRoot;
         }
 
-        public WindowHandle Create<TPresentationModel>(out TPresentationModel presentationModel)
+        public WindowHandle Create<TPresentationModel>(UILayer layer, out TPresentationModel presentationModel)
             where TPresentationModel : IDefaultPresentationModel
         {
             CancellationTokenSource cts = new();
@@ -26,10 +28,10 @@ namespace ArchitectureTemplate.UI
             presentationModel = _container.Resolve<TPresentationModel>();
             presentationModel.Initialize(cts.Token);
             
-            return CreateInternal(presentationModel, cts);
+            return CreateInternal(presentationModel, layer, cts);
         }
 
-        public WindowHandle Create<TPresentationModel, TArgs>(TArgs args, out TPresentationModel presentationModel)
+        public WindowHandle Create<TPresentationModel, TArgs>(TArgs args, UILayer layer, out TPresentationModel presentationModel)
             where TPresentationModel : IArgumentedPresentationModel<TArgs>
         {
             CancellationTokenSource cts = new();
@@ -37,16 +39,18 @@ namespace ArchitectureTemplate.UI
             presentationModel = _container.Resolve<TPresentationModel>();
             presentationModel.InitializeArgument(args, cts.Token);
 
-            return CreateInternal(presentationModel, cts);
+            return CreateInternal(presentationModel, layer, cts);
         }
 
         private WindowHandle CreateInternal<TPresentationModel>(TPresentationModel presentationModel,
-            CancellationTokenSource cts)
+            UILayer layer, CancellationTokenSource cts)
             where TPresentationModel : IPresentationModel
         {
             GameObject prefab = _assetService.GetAsset<GameObject>(presentationModel.ViewAssetKey);
             GameObject instance = _container.InstantiatePrefab(prefab);
-            
+
+            _uiRoot.SetUIElement(instance, layer);
+
             _container.InjectGameObject(instance);
 
             ICreatableWindowView<TPresentationModel> view = instance.GetComponent<ICreatableWindowView<TPresentationModel>>();
