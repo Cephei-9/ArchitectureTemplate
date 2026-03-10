@@ -10,24 +10,16 @@ namespace ArchitectureTemplate.UI
     /// </summary>
     public class UiInstaller : MonoInstaller
     {
-        [SerializeField] private ResourcesAssetProvider _resourcesAssetProvider;
-        [SerializeField] private WindowLinks _windowLinks;
-
         public override void InstallBindings()
         {
-            if (_resourcesAssetProvider == null)
-                throw new InvalidOperationException("ResourcesAssetProvider is not assigned in UiInstaller.");
-
-            if (_windowLinks == null || _windowLinks.Links == null)
-                throw new InvalidOperationException("WindowLinks or its Links array is not assigned in UiInstaller.");
-
-            Container.Bind<IAssetProvider>().FromInstance(_resourcesAssetProvider).AsSingle();
-
-            Container.Bind<WindowFactory>()
-                .AsSingle()
-                .WithArguments(_windowLinks.Links);
-
+            Container.Bind<WindowFactory>().AsSingle();
             Container.Bind<WindowService>().AsSingle();
+            
+            Container.Bind<MainMenuPresenter>().AsTransient();
+            Container.Bind<SettingsPopupPresenter>().AsTransient();
+            Container.Bind<ErrorPopupPresentationModel>().AsTransient();
+            Container.Bind<ToastPopupPresentationModel>().AsTransient();
+            
             Container.Bind<MainMenuFlow>().AsSingle();
             Container.Bind<CommonPopups>().AsSingle();
         }

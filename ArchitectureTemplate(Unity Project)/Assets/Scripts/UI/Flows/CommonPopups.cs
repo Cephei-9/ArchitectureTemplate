@@ -14,12 +14,12 @@ namespace ArchitectureTemplate.UI
 
         public void ShowError(string message)
         {
-            _windows.Open(WindowId.ErrorPopup, new MessageArgs(message));
+            _windows.OpenWindow<ErrorPopupPresentationModel, MessageArgs>(new MessageArgs(message), out _);
         }
 
         public void ShowToast(string message)
         {
-            _windows.Open(WindowId.ToastPopup, new MessageArgs(message));
+            _windows.OpenWindow<ToastPopupPresentationModel, MessageArgs>(new MessageArgs(message), out _);
         }
     }
 }

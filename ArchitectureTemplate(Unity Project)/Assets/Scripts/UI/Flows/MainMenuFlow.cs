@@ -16,17 +16,17 @@ namespace ArchitectureTemplate.UI
 
         public void OpenMainMenu()
         {
-            _windows.Open(WindowId.MainMenu);
+            _windows.OpenWindow<MainMenuPresenter>(out _);
         }
 
         public void OpenSettings()
         {
-            _windows.Open(WindowId.SettingsPopup);
+            _windows.OpenWindow<SettingsPopupPresenter>(out _);
         }
 
         public UniTask CloseSettingsAsync()
         {
-            return _windows.CloseAsync(WindowId.SettingsPopup);
+            return _windows.CloseWindow<SettingsPopupPresenter>();
         }
     }
 }
