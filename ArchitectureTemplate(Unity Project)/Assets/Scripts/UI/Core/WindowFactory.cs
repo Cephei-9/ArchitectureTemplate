@@ -1,19 +1,19 @@
 using System;
 using System.Threading;
 using ArchitectureTemplate.AssetManagement;
+using ArchitectureTemplate.DI;
 using UnityEngine;
-using Zenject;
 using Object = UnityEngine.Object;
 
 namespace ArchitectureTemplate.UI
 {
     public class WindowFactory
     {
-        private readonly DiContainer _container;
+        private readonly IDiContainer _container;
         private readonly IAssetService _assetService;
         private readonly UIRoot _uiRoot;
 
-        public WindowFactory(DiContainer container, IAssetService assetService, UIRoot uiRoot)
+        public WindowFactory(IDiContainer container, IAssetService assetService, UIRoot uiRoot)
         {
             _container = container;
             _assetService = assetService;

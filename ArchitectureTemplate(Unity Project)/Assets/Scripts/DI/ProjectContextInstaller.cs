@@ -1,18 +1,26 @@
 using ArchitectureTemplate.AssetManagement;
+using ArchitectureTemplate.DI;
 using ArchitectureTemplate.UI;
+using UnityEngine;
 using Zenject;
 
 namespace ArchitectureTemplate.Initialization
 {
     /// <summary>
-    /// Общий инсталлер для ProjectContext.
-    /// Содержит только глобальные биндинги, без привязки к конкретным сценам.
+    /// Common installer for ProjectContext.
     /// </summary>
-    public sealed class ProjectContextInstaller : MonoInstaller
+    public class ProjectContextInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {
-            Container.Bind<IAssetService>().To<AddressablesAssetService>().AsSingle();
+            Container.Install<AssetManagerInstaller>();
+            Container.Install<UiCoreInstaller>();
+
+            Container.BindInterfacesAndSelfTo<ZenjectDiContainer>()
+                .AsSingle()
+                .WithArguments(Container);
+
+            Debug.Log("Project Context");
         }
     }
 }

@@ -1,0 +1,40 @@
+---
+description: Unity-specific serialization and field ordering rules
+globs: **/*.cs
+alwaysApply: true
+---
+
+# Unity и сериализация
+
+## Поля для инспектора
+
+- Для настройки в инспекторе использовать только `[SerializeField] private`.
+- Не использовать `public` поля для инспектора.
+- По возможности не использовать константы, если значение можно вынести в инспектор.
+
+Примеры:
+
+```csharp
+[SerializeField] private Vector2Int _cellPosition;
+[SerializeField] private Button _button;
+[SerializeField] private Image _iconImage;
+[SerializeField] private Sprite _xSprite;
+[SerializeField] private Sprite _oSprite;
+```
+
+## Порядок полей
+
+- `[SerializeField]` поля должны идти **выше** публичных полей.
+- Общий порядок членов класса:
+  1. Константы
+  2. Статические поля
+  3. Публичные поля
+  4. Приватные поля (включая `[SerializeField] private`)
+  5. Конструктор
+  6. События
+  7. Публичные свойства
+  8. Приватные свойства
+  9. Публичные методы
+  10. Приватные методы
+  11. Внутренние классы (nested) — внизу родительского класса
+
