@@ -1,3 +1,4 @@
+using ArchitectureTemplate.DI;
 using Zenject;
 
 namespace ArchitectureTemplate.Initialization
@@ -9,6 +10,7 @@ namespace ArchitectureTemplate.Initialization
     {
         public override void InstallBindings()
         {
+            Container.Install<SceneDiContainerUpdater>();
             Container.Install<InitializationInstaller>();
         }
     }

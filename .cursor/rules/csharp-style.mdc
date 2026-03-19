@@ -1,0 +1,161 @@
+---
+description: C# coding style and conventions for this Unity project
+globs: **/*.cs
+alwaysApply: true
+---
+
+# C# Code Style
+
+## 1. Общие правила
+
+- Для каждого класса, структуры, енама и т.д. нужно писать `summary` (XML-комментарий над объявлением типа).
+- Не писать комментарии внутри классов, структур и енамов (внутри методов, свойств и т.п.).
+- Не использовать `#region`.
+- Не использовать expression-bodied методы. Для методов всегда использовать обычное тело с фигурными скобками.
+- Использовать expression-bodied свойства, если это уместно и делает код короче и понятнее.
+- Не использовать `var`. Всегда явно указывать тип переменной.
+- Не писать логику на одной строке после `if`. Конструкция вида `if (condition) DoSomething();` запрещена.
+
+## 3. Именование
+
+- Стараться избегать сокращений. Имена классов, функций и полей должны быть понятными и без сокращений  
+  (например, `Count` вместо `Cnt`, `Position` вместо `Pos`, `Configuration` вместо `Config`).
+
+### Приватные поля
+
+- Формат: `_camelCase`.
+- Обязательно начинать имя с нижнего подчёркивания.
+
+Примеры:
+
+```csharp
+private int _count;
+private Vector2Int _cellPosition;
+```
+
+### Публичные поля и свойства
+
+- Формат: `PascalCase`.
+
+Примеры:
+
+```csharp
+public int CurrentIndex;
+public bool IsActive { get; private set; }
+```
+
+### Коллекции
+
+- Использовать постфиксы для коллекций:
+  - `_someList` для `List<>`
+  - `_someArr` для массивов
+  - `_someMap` для `Dictionary<>`
+  - `_someHashSet` для `HashSet<>`
+  - и аналогично для других коллекций.
+
+## 5. Порядок членов класса
+
+Соблюдать следующий порядок (Microsoft-style):
+
+1. Константы
+2. Статические поля
+3. Публичные поля
+4. Приватные поля (включая `[SerializeField] private`)
+5. Конструктор
+6. События
+7. Публичные свойства
+8. Приватные свойства
+9. Публичные методы
+10. Приватные методы
+11. Внутренние классы (nested) — внизу родительского класса
+
+## 6. Внутренние классы
+
+- Внутренние (nested) классы должны располагаться внизу родительского класса.
+- Для внутренних классов, структур и енамов не нужно писать отдельные комментарии `summary`.
+
+## 7. Комментарии
+
+- Комментарии использовать только для описания классов, структур и енамов.
+- Не писать комментарии внутри классов и функций (методов).
+- Все комментарии писать на английском языке.
+
+## 8. Инициализация и `new`
+
+- Делать `new` без указания типа справа, если это возможно:
+
+```csharp
+CancellationTokenSource cts = new();
+ReactiveProperty<float> progress = new(0f);
+```
+
+## 9. `if` и скобки
+
+- Если тело `if` занимает одну строку, **не** ставить фигурные скобки:
+
+```csharp
+if (success)
+    Debug.Log("[Initialization] Game initialization completed successfully.");
+else
+    Debug.LogError("[Initialization] Game initialization failed.");
+```
+
+- Не писать логику на одной строке вместе с условием:
+
+```csharp
+// ❌ Так нельзя
+if (success) Debug.Log("[Initialization] Game initialization completed successfully.");
+```
+
+## 10. Пустые методы
+
+- Пустые методы оформлять в одну строку:
+
+```csharp
+public override void InstallBindings() { }
+```
+
+## 11. Пустые строки и группировка
+
+- Ставить пустые строки между группами полей, свойств и методов.
+
+Пример:
+
+```csharp
+public ReactiveProperty<float> Progress = new(0f);
+public int SomeField;
+
+public int I { get; private set; }
+public int SomeProp { get; set; }
+
+public void Dispose()
+{
+    CurrentStepName.Dispose();
+    Progress.Dispose();
+}
+```
+
+## 12. `null` проверки
+
+- Стараться меньше проверять на `null` и допускать аварийное завершение при наличии `null`,  
+  если это действительно исключительная ситуация.
+- В большинстве случаев нужно предполагать, что объект, который передают, не `null`.
+
+Пример чрезмерной проверки:
+
+```csharp
+float totalWeight = _model.Steps.Sum(step => step == null ? 0f : Mathf.Max(0f, step.Weight));
+```
+
+## 13. `sealed`
+
+- Не использовать `sealed` для классов и структур без особой необходимости — это излишне.
+
+## 14. CancellationToken
+
+- Для параметра `CancellationToken` в асинхронных методах по умолчанию использовать `default`:
+
+```csharp
+public UniTask<bool> RunAsync(CancellationToken cancellationToken = default)
+```
+

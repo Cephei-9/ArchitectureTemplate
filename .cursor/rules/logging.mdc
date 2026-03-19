@@ -1,0 +1,65 @@
+---
+description: Logging conventions and best practices
+globs: **/*.cs
+alwaysApply: true
+---
+
+# Логирование
+
+## 1. Что логируем
+
+Нужно логировать важные точки работы приложения так, чтобы по логу можно было читать ход работы:
+
+- Переходы между разными состояниями игры.
+- Начало и завершение важных частей приложения.
+- Ошибки, если они случаются.
+
+## 2. Формат лог-сообщений
+
+- Использовать единый формат: `Debug.Log("[ClassName] Message.");`.
+- Пример:
+
+```csharp
+Debug.Log("[GameInitialization] Game initialization completed successfully.");
+```
+
+- Всегда начинать сообщение с префикса в квадратных скобках с именем класса/контекста.
+
+## 3. Пространство имён и сокращённая запись
+
+- Не писать лог с полной записью через `UnityEngine.Debug.Log`.
+- Делать `using UnityEngine;` и использовать сокращённую запись:
+
+```csharp
+Debug.Log("[Initialization] Game initialization completed successfully.");
+Debug.LogError("[Initialization] Game initialization failed.");
+```
+
+## 4. `if` и логирование
+
+- Если контент `if`-блока занимает одну строку, не использовать фигурные скобки,  
+  но не писать выражение в одну строку с `if`.
+
+```csharp
+// ✅ Правильно
+if (success)
+    Debug.Log("[Initialization] Game initialization completed successfully.");
+else
+    Debug.LogError("[Initialization] Game initialization failed.");
+
+// ❌ Неправильно — полная запись пространства имён и/или логика в одной строке
+if (success) Debug.Log("[Initialization] Game initialization completed successfully.");
+if (success)
+{
+    UnityEngine.Debug.Log("[Initialization] Game initialization completed successfully.");
+}
+```
+
+## 5. Ошибки
+
+- Для ошибок использовать `Debug.LogError` (или аналогичный метод), сохраняя общий формат префикса:
+
+```csharp
+Debug.LogError("[Initialization] Game initialization failed.");
+```
+
