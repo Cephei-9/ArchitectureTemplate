@@ -11,9 +11,9 @@ namespace ArchitectureTemplate.UI
     /// </summary>
     public class UIRootFactory : IFactory<UIRoot>
     {
-        private readonly IAssetService _assetService;
+        private readonly AssetService _assetService;
 
-        public UIRootFactory(IAssetService assetService)
+        public UIRootFactory(AssetService assetService)
         {
             _assetService = assetService;
         }

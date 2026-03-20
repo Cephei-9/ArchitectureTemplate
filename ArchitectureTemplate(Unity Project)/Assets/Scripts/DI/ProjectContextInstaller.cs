@@ -13,7 +13,7 @@ namespace ArchitectureTemplate.Initialization
     {
         public override void InstallBindings()
         {
-            Container.Install<AssetManagerInstaller>();
+            Container.Install<AddressableAssetProviderInstaller>();
             Container.Install<UiCoreInstaller>();
 
             Container.BindInterfacesAndSelfTo<ZenjectDiContainer>()

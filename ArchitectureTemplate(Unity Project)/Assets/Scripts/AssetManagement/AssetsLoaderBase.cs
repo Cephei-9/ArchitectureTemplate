@@ -9,11 +9,11 @@ namespace ArchitectureTemplate.AssetManagement
     /// </summary>
     public abstract class AssetsLoaderBase
     {
-        protected IAssetService AssetService;
+        protected AssetService AssetService;
         
         protected abstract List<AssetKey> AssetKeys { get; }
 
-        protected AssetsLoaderBase(IAssetService assetService)
+        protected AssetsLoaderBase(AssetService assetService)
         {
             AssetService = assetService;
         }

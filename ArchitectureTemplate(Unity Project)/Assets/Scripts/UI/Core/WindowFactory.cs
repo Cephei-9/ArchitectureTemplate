@@ -10,10 +10,10 @@ namespace ArchitectureTemplate.UI
     public class WindowFactory
     {
         private readonly IDiContainer _container;
-        private readonly IAssetService _assetService;
+        private readonly AssetService _assetService;
         private readonly UIRoot _uiRoot;
 
-        public WindowFactory(IDiContainer container, IAssetService assetService, UIRoot uiRoot)
+        public WindowFactory(IDiContainer container, AssetService assetService, UIRoot uiRoot)
         {
             _container = container;
             _assetService = assetService;

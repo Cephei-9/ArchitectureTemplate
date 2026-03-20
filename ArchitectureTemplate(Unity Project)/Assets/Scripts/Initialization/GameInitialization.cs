@@ -18,11 +18,11 @@ namespace ArchitectureTemplate.Initialization
         private readonly IInitializationPipelineStep _testStep;
         private readonly WindowService _windowService;
         private AddressablesInitializationStep _addressablesInitializationStep;
-        private IAssetService _assetService;
+        private AssetService _assetService;
 
         public GameInitialization(InitializationPipelineService pipelineService, 
             AddressablesInitializationStep addressablesInitializationStep,
-            WindowService windowService, IAssetService assetService)
+            WindowService windowService, AssetService assetService)
         {
             _addressablesInitializationStep = addressablesInitializationStep;
             _pipelineService = pipelineService;

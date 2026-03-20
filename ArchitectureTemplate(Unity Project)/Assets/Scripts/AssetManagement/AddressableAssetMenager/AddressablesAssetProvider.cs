@@ -11,11 +11,11 @@ using Object = UnityEngine.Object;
 namespace ArchitectureTemplate.AssetManagement
 {
     /// <summary>
-    /// Addressables-backed asset service. Works with single assets only; handles are kept inside the service
+    /// Addressables-backed asset provider. Works with single assets only; handles are kept inside the provider
     /// with ref-counting per key so multiple subsystems can load the same asset safely.
     /// Uses key.ToString() as the Addressables address.
     /// </summary>
-    public class AddressablesAssetService : IAssetService
+    public class AddressablesAssetProvider : IAssetProvider
     {
         private AsyncOperationHandle _initHandle;
         
@@ -37,7 +37,7 @@ namespace ArchitectureTemplate.AssetManagement
                 throw new InvalidOperationException("Addressables.InitializeAsync failed.");
 
             _initialized = true;
-            Debug.Log("[AddressablesAssetService] Initialized.");
+            Debug.Log("[AddressablesAssetProvider] Initialized.");
         }
 
         public async UniTask<T> LoadAsync<T>(AssetKey key, CancellationToken cancellationToken = default) where T : Object
@@ -138,7 +138,7 @@ namespace ArchitectureTemplate.AssetManagement
             }
 
             _initialized = false;
-            Debug.Log("[AddressablesAssetService] ReleaseAll completed.");
+            Debug.Log("[AddressablesAssetProvider] ReleaseAll completed.");
         }
 
         private void SafeRelease(AssetKey key, AsyncOperationHandle handle)
