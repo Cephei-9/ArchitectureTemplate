@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 
 namespace ArchitectureTemplate.UI
@@ -7,6 +8,7 @@ namespace ArchitectureTemplate.UI
     public class WindowService
     {
         private readonly WindowFactory _factory;
+        
         private readonly Dictionary<Type, (WindowHandle Handle, IPresentationModel PresentationModel)> _openMap = new();
 
         public WindowService(WindowFactory factory)
@@ -67,6 +69,16 @@ namespace ArchitectureTemplate.UI
             }
 
             return null;
+        }
+
+        public void DestroyAll()
+        {
+            List<WindowHandle> handles = new(_openMap.Select(entry => entry.Value.Handle));
+
+            foreach (WindowHandle handle in handles)
+            {
+                handle.DestroyWindow();
+            }
         }
     }
 }
