@@ -9,13 +9,9 @@ namespace Initialization.InitializationPipeline
     {
         public override void InstallBindings()
         {
-            InitializationPipelineModel model = new();
-            InitializationPipelineRunner runner = new(model);
-            InitializationPipelineService service = new(model, runner);
-
-            Container.Bind<InitializationPipelineService>()
-                .FromInstance(service)
-                .AsSingle();
+            Container.Bind<InitializationPipelineModel>().AsSingle();
+            Container.Bind<InitializationPipelineRunner>().AsSingle();
+            Container.Bind<InitializationPipelineService>().AsSingle();
         }
     }
 }

@@ -7,13 +7,16 @@ using Object = UnityEngine.Object;
 
 namespace ArchitectureTemplate.UI
 {
+    /// <summary>
+    /// Factory that creates window instances from prefabs, resolves presentation models via DI.
+    /// </summary>
     public class WindowFactory
     {
         private readonly IDiContainer _container;
-        private readonly IAssetService _assetService;
+        private readonly AssetService _assetService;
         private readonly UIRoot _uiRoot;
 
-        public WindowFactory(IDiContainer container, IAssetService assetService, UIRoot uiRoot)
+        public WindowFactory(IDiContainer container, AssetService assetService, UIRoot uiRoot)
         {
             _container = container;
             _assetService = assetService;

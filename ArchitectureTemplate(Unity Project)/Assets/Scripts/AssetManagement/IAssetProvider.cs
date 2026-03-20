@@ -6,9 +6,9 @@ using UnityEngine;
 namespace ArchitectureTemplate.AssetManagement
 {
     /// <summary>
-    /// Service for loading and releasing assets via Addressables.
+    /// Contract for asset loading and releasing.
     /// </summary>
-    public interface IAssetService
+    public interface IAssetProvider
     {
         UniTask<T> LoadAsync<T>(AssetKey key, CancellationToken cancellationToken = default) where T : Object;
 
@@ -16,7 +16,7 @@ namespace ArchitectureTemplate.AssetManagement
 
         T GetAsset<T>(AssetKey key) where T : Object;
 
-        T InstantiateAsset<T>(AssetKey key) where T : Object; 
+        T InstantiateAsset<T>(AssetKey key) where T : Object;
 
         void Release(AssetKey key);
 
