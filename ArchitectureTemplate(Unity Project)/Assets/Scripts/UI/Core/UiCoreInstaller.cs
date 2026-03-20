@@ -14,11 +14,8 @@ namespace ArchitectureTemplate.UI
             Container.Bind<WindowFactory>().AsSingle();
             Container.Bind<WindowManager>().AsSingle();
             Container.Bind<WindowService>().AsSingle();
-
-            UIRoot uiRoot = Object.FindFirstObjectByType<UIRoot>();
-            Container.Bind<UIRoot>()
-                .FromInstance(uiRoot)
-                .AsSingle();
+            
+            Container.BindInstance(Object.FindFirstObjectByType<UIRoot>()).AsSingle();
         }
     }
 }

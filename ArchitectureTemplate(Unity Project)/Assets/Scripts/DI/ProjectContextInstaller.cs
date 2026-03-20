@@ -13,14 +13,15 @@ namespace ArchitectureTemplate.Initialization
     {
         public override void InstallBindings()
         {
+            Debug.Log("[ProjectContext] Installation started.");
+
             Container.Install<AddressableAssetProviderInstaller>();
             Container.Install<UiCoreInstaller>();
-
             Container.BindInterfacesAndSelfTo<ZenjectDiContainer>()
                 .AsSingle()
                 .WithArguments(Container);
 
-            Debug.Log("Project Context");
+            Debug.Log("[ProjectContext] Installation completed.");
         }
     }
 }

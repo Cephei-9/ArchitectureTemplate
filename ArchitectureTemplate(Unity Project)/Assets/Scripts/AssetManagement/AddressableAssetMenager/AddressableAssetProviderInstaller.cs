@@ -9,14 +9,9 @@ namespace ArchitectureTemplate.AssetManagement
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<AddressablesAssetProvider>()
-                .AsSingle();
-
-            Container.Bind<AssetService>()
-                .AsSingle();
-
-            Container.Bind<AddressablesInitializationStep>()
-                .AsSingle();
+            Container.Bind<AssetService>().AsSingle();
+            Container.Bind<AddressablesInitializationStep>().AsSingle();
+            Container.BindInterfacesAndSelfTo<AddressablesAssetProvider>().AsSingle();
         }
     }
 }
