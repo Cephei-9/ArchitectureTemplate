@@ -13,7 +13,6 @@ namespace ArchitectureTemplate.AssetManagement
             Container.BindInterfacesAndSelfTo<AddressablesAssetService>()
                 .AsSingle();
 
-            Debug.Log("Install Asset Menegement");
         }
     }
 }
