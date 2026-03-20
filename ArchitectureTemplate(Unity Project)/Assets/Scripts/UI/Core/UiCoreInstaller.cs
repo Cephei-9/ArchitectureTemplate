@@ -12,17 +12,13 @@ namespace ArchitectureTemplate.UI
         public override void InstallBindings()
         {
             Container.Bind<WindowFactory>().AsSingle();
+            Container.Bind<WindowManager>().AsSingle();
             Container.Bind<WindowService>().AsSingle();
 
             UIRoot uiRoot = Object.FindFirstObjectByType<UIRoot>();
             Container.Bind<UIRoot>()
                 .FromInstance(uiRoot)
                 .AsSingle();
-
-            // Container.Bind<UIRoot>()
-            //     .FromFactory<UIRootFactory>()
-            //     .AsSingle()
-            //     .NonLazy();
         }
     }
 }

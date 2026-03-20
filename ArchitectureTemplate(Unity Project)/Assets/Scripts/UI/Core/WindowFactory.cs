@@ -7,6 +7,9 @@ using Object = UnityEngine.Object;
 
 namespace ArchitectureTemplate.UI
 {
+    /// <summary>
+    /// Factory that creates window instances from prefabs, resolves presentation models via DI.
+    /// </summary>
     public class WindowFactory
     {
         private readonly IDiContainer _container;

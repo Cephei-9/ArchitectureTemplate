@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ArchitectureTemplate.AssetManagement
 {
     /// <summary>
-    /// Internal contract for asset loading and releasing.
+    /// Contract for asset loading and releasing.
     /// </summary>
     public interface IAssetProvider
     {
