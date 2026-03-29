@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading;
 using ArchitectureTemplate.AssetManagement;
 using ArchitectureTemplate.MainMenu;
-using ArchitectureTemplate.UI;
 using Cysharp.Threading.Tasks;
 using Initialization.InitializationPipeline;
 using SceneLoading;
@@ -18,20 +17,20 @@ namespace ArchitectureTemplate.Initialization
     {
         private readonly InitializationPipelineService _pipelineService;
         private readonly SceneLoader _sceneLoader;
-        private readonly WindowService _windowService;
         private readonly AddressablesInitializationStep _addressablesInitializationStep;
         private readonly ProjectAssetsInitializationStep _projectAssetsInitializationStep;
+        private InitializationScreenService _initializationScreenService;
 
         public GameInitialization(InitializationPipelineService pipelineService, 
             AddressablesInitializationStep addressablesInitializationStep,
             ProjectAssetsInitializationStep projectAssetsInitializationStep,
-            WindowService windowService,
-            SceneLoader sceneLoader)
+            SceneLoader sceneLoader,
+            InitializationScreenService initializationScreenService)
         {
+            _initializationScreenService = initializationScreenService;
             _addressablesInitializationStep = addressablesInitializationStep;
             _projectAssetsInitializationStep = projectAssetsInitializationStep;
             _pipelineService = pipelineService;
-            _windowService = windowService;
             _sceneLoader = sceneLoader;
         }
 
@@ -46,15 +45,14 @@ namespace ArchitectureTemplate.Initialization
             
             using CancellationTokenSource cts = new();
 
+            await _addressablesInitializationStep.ExecuteAsync(cts.Token);
+            await _initializationScreenService.OpenAsync(cts.Token);
+            
             bool isSuccess = await _pipelineService.RunAsync(ComposeInitializationSteps(), cts.Token);
-
-            await _assetService.LoadAsync<Object>(AssetKey.InitializationScreen, cts.Token);
-            _windowService.OpenWindow(UILayer.Screen, out InitializationScreenPresenter _);
 
             if (isSuccess)
             {
                 Debug.Log("[GameInitialization] Game initialization completed successfully.");
-                _windowService.OpenWindow(UILayer.Screen, out LoadingScreenPresenter _);
                 LoadMainMenuAsync(cts.Token).Forget();
 
                 return;
@@ -67,7 +65,6 @@ namespace ArchitectureTemplate.Initialization
         {
             List<IInitializationPipelineStep> stepsList = new()
             {
-                _addressablesInitializationStep,
                 _projectAssetsInitializationStep
             };
             
@@ -77,7 +74,6 @@ namespace ArchitectureTemplate.Initialization
         private async UniTaskVoid LoadMainMenuAsync(CancellationToken token)
         {
             await _sceneLoader.LoadEmptySceneAsync(token);
-            // Unload all initialization assets
             await _sceneLoader.LoadSceneAsync(SceneIds.MainMenu, token);
             
             MainMenuEntryPoint mainMenuEntryPoint = Object.FindFirstObjectByType<MainMenuEntryPoint>();

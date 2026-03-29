@@ -13,6 +13,11 @@ namespace ArchitectureTemplate.UI
         [SerializeField] private Transform _windowsLayer;
         [SerializeField] private Transform _popupsLayer;
 
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         public void SetUIElement(GameObject uiElement, UILayer layer)
         {
             Transform parent = GetLayerTransform(layer);

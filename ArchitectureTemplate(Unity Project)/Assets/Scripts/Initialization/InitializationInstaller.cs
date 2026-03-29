@@ -1,4 +1,3 @@
-using ArchitectureTemplate.UI;
 using Initialization.InitializationPipeline;
 using Zenject;
 
@@ -13,7 +12,6 @@ namespace ArchitectureTemplate.Initialization
         {
             Container.Install<InitializationPipelineInstaller>();
             
-            Container.Bind<InitializationScreenPresenter>().AsTransient();
             Container.Bind<ProjectAssetsInitializationStep>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameInitialization>().AsSingle();
         }
