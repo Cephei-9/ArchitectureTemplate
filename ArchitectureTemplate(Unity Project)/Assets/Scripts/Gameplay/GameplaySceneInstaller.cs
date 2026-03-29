@@ -11,6 +11,9 @@ namespace ArchitectureTemplate.Gameplay
     {
         public override void InstallBindings()
         {
+            Container.Bind<ReturnToMainMenuOperation>()
+                .AsSingle();
+
             Container.Bind<GameplayService>()
                 .AsSingle();
 

@@ -30,10 +30,11 @@ namespace Game.App
         {
             Debug.Log("[StartGameOperation] ExecuteAsync started.");
 
+            await _sceneLoader.LoadEmptySceneAsync(token);
+            
             _windowService.DestroyAll();
             _mainMenuAssetsLoader.ReleaseAll();
 
-            await _sceneLoader.LoadEmptySceneAsync(token);
             await _sceneLoader.LoadSceneAsync(SceneIds.Gameplay, token);
             
             GameplayEntryPoint gameplayEntryPoint = Object.FindFirstObjectByType<GameplayEntryPoint>();
