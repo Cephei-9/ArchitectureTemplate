@@ -4,5 +4,6 @@ namespace ArchitectureTemplate.AssetManagement
     {
         InitializationScreen,
         MainMenuScreen,
+        GameplayScreen,
     }
 }
