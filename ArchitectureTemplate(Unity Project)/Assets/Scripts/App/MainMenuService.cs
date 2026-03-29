@@ -1,6 +1,5 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using SceneLoading;
 using UniRx;
 using UnityEngine;
 
@@ -8,14 +7,15 @@ namespace Game.App
 {
     public sealed class MainMenuService
     {
-        private readonly SceneLoader _sceneLoader;
+        private readonly StartGameplayOperation _startGameplayOperation;
+        
         private readonly ReactiveProperty<bool> _isBusy = new(false);
 
         public IReadOnlyReactiveProperty<bool> IsBusy => _isBusy;
 
-        public MainMenuService(SceneLoader sceneLoader)
+        public MainMenuService(StartGameplayOperation startGameplayOperation)
         {
-            _sceneLoader = sceneLoader;
+            _startGameplayOperation = startGameplayOperation;
         }
 
         public async UniTask<bool> StartGameAsync(CancellationToken cancellationToken = default)
@@ -23,33 +23,21 @@ namespace Game.App
             if(_isBusy.Value)
                 return false;
 
-            Debug.Log("[MainMenuService] StartGameAsync started.");
-            
             _isBusy.Value = true;
 
-            bool isSuccess = await _sceneLoader.LoadSceneAsync(SceneIds.Gameplay, cancellationToken);
+            bool isSuccess = await _startGameplayOperation.StartGameplayAsync(cancellationToken);
 
             _isBusy.Value = false;
-
-            if (isSuccess)
-            {
-                Debug.Log("[MainMenuService] StartGameAsync succeeded.");
-                return true;
-            }
-
-            Debug.Log("[MainMenuService] StartGameAsync failed");
-            return false;
+            return isSuccess;
         }
 
-        public bool QuitGameAsync()
+        public void QuitGameAsync()
         {
-            if (_isBusy.Value)
-                return false;
-            
+            if (_isBusy.Value) return;
+
             Application.Quit();
             
             Debug.Log("[MainMenuService] QuitGameAsync finished.");
-            return false;
         }
     }
 }

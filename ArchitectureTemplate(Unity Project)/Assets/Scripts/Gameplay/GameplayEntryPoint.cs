@@ -1,5 +1,4 @@
 using System.Threading;
-using ArchitectureTemplate.AssetManagement;
 using ArchitectureTemplate.UI;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -10,25 +9,19 @@ namespace ArchitectureTemplate.Gameplay
     /// <summary>
     /// Entry point that opens the gameplay screen.
     /// </summary>
-    public class GameplayStart : IInitializable
+    public class GameplayEntryPoint : MonoBehaviour
     {
-        private readonly AssetService _assetService;
-        private readonly GameplayAssetsLoader _gameplayAssetsLoader;
-        private readonly WindowService _windowService;
+        private GameplayAssetsLoader _gameplayAssetsLoader;
+        private WindowService _windowService;
 
-        public GameplayStart(WindowService windowService, GameplayAssetsLoader gameplayAssetsLoader, AssetService assetService)
+        [Inject]
+        public void Construct(WindowService windowService, GameplayAssetsLoader gameplayAssetsLoader)
         {
             _windowService = windowService;
             _gameplayAssetsLoader = gameplayAssetsLoader;
-            _assetService = assetService;
         }
 
-        public void Initialize()
-        {
-            EnterGameplay().Forget();
-        }
-
-        private async UniTaskVoid EnterGameplay()
+        public async UniTaskVoid EnterGameplay()
         {
             Debug.Log("[GameplayStart] Gameplay started.");
 

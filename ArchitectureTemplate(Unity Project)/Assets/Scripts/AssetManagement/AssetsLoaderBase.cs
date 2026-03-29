@@ -23,7 +23,7 @@ namespace ArchitectureTemplate.AssetManagement
             await AssetService.LoadManyAsync(AssetKeys, token);
         } 
         
-        public virtual void ReleaseAll(CancellationToken token = default)
+        public virtual void ReleaseAll()
         {
             AssetService.ReleaseMany(AssetKeys);
         } 

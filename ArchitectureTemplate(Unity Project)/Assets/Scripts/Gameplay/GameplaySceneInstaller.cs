@@ -20,7 +20,7 @@ namespace ArchitectureTemplate.Gameplay
             Container.Bind<GameplayScreenPresenter>()
                 .AsTransient();
 
-            Container.BindInterfacesAndSelfTo<GameplayStart>()
+            Container.BindInterfacesAndSelfTo<GameplayEntryPoint>()
                 .AsSingle();
         }
     }

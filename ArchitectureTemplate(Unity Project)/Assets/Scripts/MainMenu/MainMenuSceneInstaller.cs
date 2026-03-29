@@ -11,6 +11,9 @@ namespace ArchitectureTemplate.MainMenu
     {
         public override void InstallBindings()
         {
+            Container.Bind<StartGameplayOperation>()
+                .AsSingle();
+
             Container.Bind<MainMenuService>()
                 .AsSingle();
 
