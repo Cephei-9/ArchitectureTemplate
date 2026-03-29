@@ -28,19 +28,21 @@ namespace Game.App
 
         public async UniTask<bool> StartGameplayAsync(CancellationToken token = default)
         {
-            Debug.Log("[StartGameOperation] ExecuteAsync started.");
+            Debug.Log("[StartGameplayOperation] StartGameplayAsync started.");
+
+            _windowService.DestroyAll();
+            _windowService.OpenWindow(UILayer.Screen, out LoadingScreenPresenter _);
 
             await _sceneLoader.LoadEmptySceneAsync(token);
-            
-            _windowService.DestroyAll();
+
             _mainMenuAssetsLoader.ReleaseAll();
 
             await _sceneLoader.LoadSceneAsync(SceneIds.Gameplay, token);
             
             GameplayEntryPoint gameplayEntryPoint = Object.FindFirstObjectByType<GameplayEntryPoint>();
-            gameplayEntryPoint.EnterGameplay();
+            gameplayEntryPoint.EnterGameplay().Forget();
 
-            Debug.Log("[StartGameOperation] Start gameplay succeeded.");
+            Debug.Log("[StartGameplayOperation] Start gameplay succeeded.");
             return true;
         }
     }

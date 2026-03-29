@@ -20,16 +20,18 @@ namespace ArchitectureTemplate.Initialization
         private readonly SceneLoader _sceneLoader;
         private readonly WindowService _windowService;
         private readonly AddressablesInitializationStep _addressablesInitializationStep;
-        private readonly AssetService _assetService;
+        private readonly ProjectAssetsInitializationStep _projectAssetsInitializationStep;
 
         public GameInitialization(InitializationPipelineService pipelineService, 
             AddressablesInitializationStep addressablesInitializationStep,
-            WindowService windowService, AssetService assetService, SceneLoader sceneLoader)
+            ProjectAssetsInitializationStep projectAssetsInitializationStep,
+            WindowService windowService,
+            SceneLoader sceneLoader)
         {
             _addressablesInitializationStep = addressablesInitializationStep;
+            _projectAssetsInitializationStep = projectAssetsInitializationStep;
             _pipelineService = pipelineService;
             _windowService = windowService;
-            _assetService = assetService;
             _sceneLoader = sceneLoader;
         }
 
@@ -43,12 +45,7 @@ namespace ArchitectureTemplate.Initialization
             Debug.Log("[GameInitialization] Initialization started.");
             
             using CancellationTokenSource cts = new();
-            
-            // В первую очередь нужно выполнить инициализацию адрессаблов, следом включить шторку, и уже потом выполнять
-            // всю прочую инициализацию. Это важно, потмоу что перед общей инициализацией, нам нужно открыть шторку,
-            // а для этого нужны адрессаблы, так что они первые, и без вопросов. Ну или можно было бы просто держать
-            // шторку обособленно от остального UI и грузить ее сразу в сцену. Но пока это излишне
-            
+
             bool isSuccess = await _pipelineService.RunAsync(ComposeInitializationSteps(), cts.Token);
 
             await _assetService.LoadAsync<Object>(AssetKey.InitializationScreen, cts.Token);
@@ -57,6 +54,7 @@ namespace ArchitectureTemplate.Initialization
             if (isSuccess)
             {
                 Debug.Log("[GameInitialization] Game initialization completed successfully.");
+                _windowService.OpenWindow(UILayer.Screen, out LoadingScreenPresenter _);
                 LoadMainMenuAsync(cts.Token).Forget();
 
                 return;
@@ -67,14 +65,18 @@ namespace ArchitectureTemplate.Initialization
 
         private List<IInitializationPipelineStep> ComposeInitializationSteps()
         {
-            List<IInitializationPipelineStep> stepsList = new() { _addressablesInitializationStep };
+            List<IInitializationPipelineStep> stepsList = new()
+            {
+                _addressablesInitializationStep,
+                _projectAssetsInitializationStep
+            };
             
             return stepsList;
         }
 
         private async UniTaskVoid LoadMainMenuAsync(CancellationToken token)
         {
-            await _sceneLoader.LoadEmptySceneAsync();
+            await _sceneLoader.LoadEmptySceneAsync(token);
             // Unload all initialization assets
             await _sceneLoader.LoadSceneAsync(SceneIds.MainMenu, token);
             

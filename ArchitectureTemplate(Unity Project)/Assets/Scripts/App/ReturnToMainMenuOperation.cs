@@ -30,9 +30,11 @@ namespace Game.App
         {
             Debug.Log("[ReturnToMainMenuOperation] ExecuteAsync started.");
 
-            await _sceneLoader.LoadEmptySceneAsync(cancellationToken);
-            
             _windowService.DestroyAll();
+            _windowService.OpenWindow(UILayer.Screen, out LoadingScreenPresenter _);
+
+            await _sceneLoader.LoadEmptySceneAsync(cancellationToken);
+
             _gameplayAssetsLoader.ReleaseAll();
 
             await _sceneLoader.LoadSceneAsync(SceneIds.MainMenu, cancellationToken);

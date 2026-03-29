@@ -18,6 +18,8 @@ namespace ArchitectureTemplate.Initialization
 
             Container.Install<AddressableAssetProviderInstaller>();
             Container.Install<UiCoreInstaller>();
+            
+            Container.Bind<LoadingScreenPresenter>().AsTransient();
             Container.BindInterfacesAndSelfTo<ZenjectDiContainer>()
                 .AsSingle()
                 .WithArguments(Container);

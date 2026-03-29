@@ -1,5 +1,4 @@
 using System.Threading;
-using ArchitectureTemplate.AssetManagement;
 using ArchitectureTemplate.UI;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -12,16 +11,14 @@ namespace ArchitectureTemplate.MainMenu
     /// </summary>
     public class MainMenuEntryPoint : MonoBehaviour
     {
-        private AssetService _assetService;
         private MainMenuAssetsLoader _mainMenuAssetsLoader;
         private WindowService _windowService;
         
         [Inject]
-        public void Construct(WindowService windowService, MainMenuAssetsLoader mainMenuAssetsLoader, AssetService assetService)
+        public void Construct(WindowService windowService, MainMenuAssetsLoader mainMenuAssetsLoader)
         {
             _windowService = windowService;
             _mainMenuAssetsLoader = mainMenuAssetsLoader;
-            _assetService = assetService;
         }
         
         public void EnterMainMenu()
@@ -37,9 +34,7 @@ namespace ArchitectureTemplate.MainMenu
 
             await _mainMenuAssetsLoader.LoadAll(cts.Token);
             
-            _windowService.CloseWindow<InitializationScreenPresenter>();
-            _assetService.Release(AssetKey.InitializationScreen);
-            
+            _windowService.CloseWindow<LoadingScreenPresenter>();
             _windowService.OpenWindow(UILayer.Screen, out MainMenuScreenPresenter _);
         }
     }

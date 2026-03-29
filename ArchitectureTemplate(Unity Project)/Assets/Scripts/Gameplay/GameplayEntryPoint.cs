@@ -23,11 +23,13 @@ namespace ArchitectureTemplate.Gameplay
 
         public async UniTaskVoid EnterGameplay()
         {
-            Debug.Log("[GameplayStart] Gameplay started.");
+            Debug.Log("[GameplayEntryPoint] Gameplay started.");
 
             using CancellationTokenSource cts = new();
+            
             await _gameplayAssetsLoader.LoadAll(cts.Token);
             
+            _windowService.CloseWindow<LoadingScreenPresenter>();
             _windowService.OpenWindow(UILayer.Screen, out GameplayScreenPresenter _);
         }
     }
