@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using ArchitectureTemplate.AssetManagement;
-using ArchitectureTemplate.UI;
+using ArchitectureTemplate.MainMenu;
 using Cysharp.Threading.Tasks;
 using Initialization.InitializationPipeline;
+using SceneLoading;
 using UnityEngine;
 using Zenject;
 
@@ -15,19 +16,22 @@ namespace ArchitectureTemplate.Initialization
     public class GameInitialization : IInitializable
     {
         private readonly InitializationPipelineService _pipelineService;
-        private readonly IInitializationPipelineStep _testStep;
-        private readonly WindowService _windowService;
-        private AddressablesInitializationStep _addressablesInitializationStep;
-        private AssetService _assetService;
+        private readonly SceneLoader _sceneLoader;
+        private readonly AddressablesInitializationStep _addressablesInitializationStep;
+        private readonly ProjectAssetsInitializationStep _projectAssetsInitializationStep;
+        private InitializationScreenService _initializationScreenService;
 
         public GameInitialization(InitializationPipelineService pipelineService, 
             AddressablesInitializationStep addressablesInitializationStep,
-            WindowService windowService, AssetService assetService)
+            ProjectAssetsInitializationStep projectAssetsInitializationStep,
+            SceneLoader sceneLoader,
+            InitializationScreenService initializationScreenService)
         {
+            _initializationScreenService = initializationScreenService;
             _addressablesInitializationStep = addressablesInitializationStep;
+            _projectAssetsInitializationStep = projectAssetsInitializationStep;
             _pipelineService = pipelineService;
-            _windowService = windowService;
-            _assetService = assetService;
+            _sceneLoader = sceneLoader;
         }
 
         public void Initialize()
@@ -40,20 +44,17 @@ namespace ArchitectureTemplate.Initialization
             Debug.Log("[GameInitialization] Initialization started.");
             
             using CancellationTokenSource cts = new();
-            
-            // В первую очередь нужно выполнить инициализацию адрессаблов, следом включить шторку, и уже потом выполнять
-            // всю прочую инициализацию. Это важно, потмоу что перед общей инициализацией, нам нужно открыть шторку,
-            // а для этого нужны адрессаблы, так что они первые, и без вопросов. Ну или можно было бы просто держать
-            // шторку обособленно от остального UI и грузить ее сразу в сцену. Но пока это излишне
+
+            await _addressablesInitializationStep.ExecuteAsync(cts.Token);
+            await _initializationScreenService.OpenAsync(cts.Token);
             
             bool isSuccess = await _pipelineService.RunAsync(ComposeInitializationSteps(), cts.Token);
-
-            await _assetService.LoadAsync<Object>(AssetKey.InitializationScreen, cts.Token);
-            _windowService.OpenWindow(UILayer.Screen, out InitializationScreenPresenter _);
 
             if (isSuccess)
             {
                 Debug.Log("[GameInitialization] Game initialization completed successfully.");
+                LoadMainMenuAsync(cts.Token).Forget();
+
                 return;
             }
 
@@ -62,9 +63,21 @@ namespace ArchitectureTemplate.Initialization
 
         private List<IInitializationPipelineStep> ComposeInitializationSteps()
         {
-            List<IInitializationPipelineStep> stepsList = new() { _addressablesInitializationStep };
+            List<IInitializationPipelineStep> stepsList = new()
+            {
+                _projectAssetsInitializationStep
+            };
             
             return stepsList;
+        }
+
+        private async UniTaskVoid LoadMainMenuAsync(CancellationToken token)
+        {
+            await _sceneLoader.LoadEmptySceneAsync(token);
+            await _sceneLoader.LoadSceneAsync(SceneIds.MainMenu, token);
+            
+            MainMenuEntryPoint mainMenuEntryPoint = Object.FindFirstObjectByType<MainMenuEntryPoint>();
+            mainMenuEntryPoint.EnterMainMenu();
         }
     }
 }

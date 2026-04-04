@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 4952197545491861208}
   - component: {fileID: 7802414035411617445}
   m_Layer: 5
-  m_Name: UIRoot
+  m_Name: UIRootPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

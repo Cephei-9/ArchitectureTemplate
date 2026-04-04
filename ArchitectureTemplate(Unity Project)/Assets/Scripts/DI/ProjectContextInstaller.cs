@@ -1,6 +1,7 @@
 using ArchitectureTemplate.AssetManagement;
 using ArchitectureTemplate.DI;
 using ArchitectureTemplate.UI;
+using SceneLoading;
 using UnityEngine;
 using Zenject;
 
@@ -17,10 +18,16 @@ namespace ArchitectureTemplate.Initialization
 
             Container.Install<AddressableAssetProviderInstaller>();
             Container.Install<UiCoreInstaller>();
+            
+            Container.Bind<InitializationScreenPresenter>().AsTransient();
+            Container.Bind<LoadingScreenPresenter>().AsTransient();
+            Container.Bind<InitializationScreenService>().AsSingle();
             Container.BindInterfacesAndSelfTo<ZenjectDiContainer>()
                 .AsSingle()
                 .WithArguments(Container);
-
+            Container.Bind<SceneLoader>()
+                .AsSingle();
+            
             Debug.Log("[ProjectContext] Installation completed.");
         }
     }
